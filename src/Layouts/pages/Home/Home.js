@@ -19,7 +19,7 @@ const Home = () => {
         <NavDropdown.Item href="#action5">Something else here</NavDropdown.Item>
       </NavDropdown>
       {newsFromHome.map((news) => (
-        <NewsCard key={newsFromHome._id} news={newsFromHome}></NewsCard>
+        <NewsCard key={news._id} news={news}></NewsCard>
       ))}
     </div>
   );

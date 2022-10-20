@@ -4,6 +4,8 @@ import Main from "../../Layouts/Main";
 import Category from "../../Layouts/pages/Category/Category";
 import Home from "../../Layouts/pages/Home/Home";
 import News from "../../Layouts/pages/News/News";
+import LogIn from "../../Layouts/pages/LogIn/LogIn";
+import Register from "../../Layouts/pages/Register/Register";
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -26,6 +28,14 @@ export const routes = createBrowserRouter([
         element: <News></News>,
         loader: ({ params }) =>
           fetch(`http://localhost:5000/news/${params.id}`),
+      },
+      {
+        path: "/login",
+        element: <LogIn></LogIn>,
+      },
+      {
+        path: "/register",
+        element: <Register></Register>,
       },
     ],
   },

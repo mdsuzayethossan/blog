@@ -8,8 +8,8 @@ function BrandCarousel() {
   ];
   return (
     <Carousel variant="dark">
-      {pic.map((image) => (
-        <Carousel.Item>
+      {pic.map((image, index) => (
+        <Carousel.Item key={index}>
           <img className="d-block w-100" src={image} alt="First slide" />
         </Carousel.Item>
       ))}
