@@ -4,13 +4,16 @@ import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
         <Navbar.Brand href="#" className="fw-bold">
-          Finder
+          <Link to="/" className="text-decoration-none">
+            Finder
+          </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
