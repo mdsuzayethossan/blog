@@ -2,10 +2,15 @@ import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import Alert from "react-bootstrap/Alert";
+import { toast } from "react-hot-toast";
 function LogIn() {
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { signIn } = useContext(AuthContext);
+  const { loading, signIn, setLoading } = useContext(AuthContext);
   const [emailErr, setEmailErr] = useState();
   const [passwordErr, setPasswordErr] = useState();
   const handleLogin = (event) => {
@@ -24,21 +29,41 @@ function LogIn() {
       setPasswordErr("Password field is required");
       return;
     } else {
+      setEmailErr("");
+      setError("");
       setPasswordErr("");
       signIn(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           form.reset();
-          navigate("/");
+          if (user.emailVerified) {
+            navigate(from, { replace: true });
+          } else {
+            toast.error(
+              "Your email is not verified! Please verify your email from your inbox email or spam email"
+            );
+          }
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
+          setError(errorMessage);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   };
   return (
     <Form onSubmit={handleLogin}>
+      {["warning"].map(
+        (variant) =>
+          error && (
+            <Alert key={variant} variant={variant}>
+              {error}
+            </Alert>
+          )
+      )}
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control type="email" name="email" placeholder="Enter email" />

@@ -22,11 +22,9 @@ function Header() {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
-        <Navbar.Brand href="#" className="fw-bold">
-          <Link to="/" className="text-decoration-none">
-            Finder
-          </Link>
-        </Navbar.Brand>
+        <Link to="/" className="text-decoration-none fw-bold fs-3">
+          Finder
+        </Link>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -72,7 +70,7 @@ function Header() {
                     <Dropdown.Item eventKey="1">Action</Dropdown.Item>
                     <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
                     <Dropdown.Item eventKey="3">
-                      Something else here
+                      <Link to="/profile">Profile</Link>
                     </Dropdown.Item>
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogOut} eventKey="4">

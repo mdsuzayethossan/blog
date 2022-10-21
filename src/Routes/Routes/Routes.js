@@ -6,6 +6,9 @@ import Home from "../../Layouts/pages/Home/Home";
 import News from "../../Layouts/pages/News/News";
 import LogIn from "../../Layouts/pages/LogIn/LogIn";
 import Register from "../../Layouts/pages/Register/Register";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import TermsAndConditions from "../../Layouts/pages/TermsAndConditions/TermsAndConditions";
+import Profile from "../../Layouts/pages/Profile/Profile";
 export const routes = createBrowserRouter([
   {
     path: "/",
@@ -25,7 +28,11 @@ export const routes = createBrowserRouter([
       },
       {
         path: "/news/:id",
-        element: <News></News>,
+        element: (
+          <PrivateRoute>
+            <News></News>
+          </PrivateRoute>
+        ),
         loader: ({ params }) =>
           fetch(`http://localhost:5000/news/${params.id}`),
       },
@@ -36,6 +43,18 @@ export const routes = createBrowserRouter([
       {
         path: "/register",
         element: <Register></Register>,
+      },
+      {
+        path: "/terms-and-conditions",
+        element: <TermsAndConditions></TermsAndConditions>,
+      },
+      {
+        path: "/profile",
+        element: (
+          <PrivateRoute>
+            <Profile></Profile>
+          </PrivateRoute>
+        ),
       },
     ],
   },

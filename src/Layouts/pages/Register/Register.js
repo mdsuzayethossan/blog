@@ -2,9 +2,18 @@ import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { AuthContext } from "../../../contexts/AuthProvider/AuthProvider";
+import Alert from "react-bootstrap/Alert";
+import { Link } from "react-router-dom";
+import { setPersistence } from "firebase/auth";
+import { toast } from "react-hot-toast";
 
 function Register() {
-  const { createUser } = useContext(AuthContext);
+  const [accepted, setAccepted] = useState(false);
+  const [error, setError] = useState("");
+  const [profileState, setProfileState] = useState("");
+  const [sentEmail, setSentEmail] = useState("");
+  const { createUser, verifyEmail, updateUserProfile } =
+    useContext(AuthContext);
   const [passwordErr, setPasswordErr] = useState();
   const [nameErr, setNameErr] = useState();
   const [photoUrlErr, setPhotoUrlErr] = useState();
@@ -93,20 +102,62 @@ function Register() {
       setEmailErr("");
       setPasswordErr("");
       setCpasswordErr("");
+      setError("");
       createUser(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           form.reset();
+          setError("User created successfully");
+          handleUpdateUserProfile(name, photoUrl);
+          handleEmailVerification();
+          toast.success("Successfully created!");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorMessage);
+          setError(errorMessage);
         });
     }
   };
+  const handleUpdateUserProfile = (name, photoURL) => {
+    const profile = {
+      displayName: name,
+      photoURL: photoURL,
+    };
+    updateUserProfile(profile)
+      .then(() => {
+        setPersistence("Profile updated successfully");
+      })
+      .catch((error) => {
+        setProfileState(error.message);
+      });
+  };
+  const handleEmailVerification = () => {
+    verifyEmail().then(() => {
+      setSentEmail("We have sent a email to verify your email");
+    });
+  };
+  const handleAccepted = (event) => {
+    setAccepted(event.target.checked);
+  };
   return (
     <Form onSubmit={handleRegister}>
+      {["warning"].map(
+        (variant) =>
+          error && (
+            <Alert key={variant} variant={variant}>
+              {error}
+            </Alert>
+          )
+      )}
+      {["warning"].map(
+        (variant) =>
+          profileState && (
+            <Alert key={variant} variant={variant}>
+              {profileState}
+            </Alert>
+          )
+      )}
       <Form.Group className="mb-3" controlId="formBasicName">
         <Form.Label>Your Name</Form.Label>
         <Form.Control
@@ -174,7 +225,19 @@ function Register() {
           ""
         )}
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        <Form.Check
+          type="checkbox"
+          onClick={handleAccepted}
+          label={
+            <>
+              Accept{" "}
+              <Link to="/terms-and-conditions">terms and conditions</Link>
+            </>
+          }
+        />
+      </Form.Group>
+      <Button variant="primary" type="submit" disabled={!accepted}>
         Register
       </Button>
     </Form>
